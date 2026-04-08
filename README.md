@@ -27,6 +27,7 @@
 <img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
 
 ## ◈ About Me
+<div align="center"> <img src="https://media.giphy.com/media/L8K62iTDkzGX6/giphy.gif" width="320" alt="girl coder animation" /> </div> <p align="center"> I’m a <b>Full-Stack Developer</b> passionate about building<br/> <b>scalable, elegant & user-focused web applications</b><br/> where clean code meets thoughtful design ✨ </p>
 
 ```typescript
 const dhruv = {
