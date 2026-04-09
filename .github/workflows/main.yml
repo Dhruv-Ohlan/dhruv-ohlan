@@ -2,9 +2,11 @@ name: Update README cards
 
 on:
   schedule:
-    - cron: "0 0 * * *" # Runs once daily at midnight (UTC)
+    # Runs once daily at midnight (UTC)
+    - cron: "0 0 * * *"
   workflow_dispatch:
 
+# Required so GITHUB_TOKEN can push commits back to the repo
 permissions:
   contents: write
 
@@ -13,9 +15,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           persist-credentials: true
+          fetch-depth: 0
 
       - name: Generate stats card
         uses: readme-tools/github-readme-stats-action@v1
@@ -43,8 +47,17 @@ jobs:
 
       - name: Commit cards
         run: |
+          set -e
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
           git add profile/*.svg
-          git commit -m "Update README cards" || exit 0
+
+          # If nothing changed, don't fail the workflow
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git commit -m "Update README cards"
           git push
