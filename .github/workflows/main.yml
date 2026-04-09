@@ -2,8 +2,13 @@ name: Update README cards
 
 on:
   schedule:
-    - cron: "0 0 * * *" # daily at 00:00 UTC
+    - cron: "0 3 * * *"
   workflow_dispatch:
+
+# Prevent overlapping runs from racing to push to main
+concurrency:
+  group: update-readme-cards-main
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -11,26 +16,10 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           persist-credentials: true
-          fetch-depth: 0
-
-      - name: Debug context
-        run: |
-          set -euxo pipefail
-          echo "actor=${{ github.actor }}"
-          echo "repo=${{ github.repository }}"
-          echo "ref=${{ github.ref }}"
-          git --version
-
-      - name: Ensure profile directory exists
-        run: |
-          set -euxo pipefail
-          mkdir -p profile
 
       - name: Generate stats card
         uses: readme-tools/github-readme-stats-action@v1
@@ -40,49 +29,19 @@ jobs:
           path: profile/stats.svg
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Generate top languages card
-        uses: readme-tools/github-readme-stats-action@v1
-        with:
-          card: top-langs
-          options: username=${{ github.repository_owner }}&layout=compact&langs_count=6
-          path: profile/top-langs.svg
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Generate pin card
-        uses: readme-tools/github-readme-stats-action@v1
-        with:
-          card: pin
-          options: username=readme-tools&repo=github-readme-stats
-          path: profile/pin-readme-tools-github-readme-stats.svg
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Debug generated files
+      - name: Commit cards
         run: |
-          set -euxo pipefail
-          ls -la
-          ls -la profile || true
-          file profile/*.svg || true
+          set -e
 
-      - name: Commit & push (only if files changed)
-        run: |
-          set -euxo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
 
-          # Don't fail if no files match (prevents exit code 1)
-          shopt -s nullglob
-          files=(profile/*.svg)
-          if [ ${#files[@]} -eq 0 ]; then
-            echo "No SVG files found under profile/. Nothing to commit."
-            exit 0
-          fi
+          git add profile/*.svg
+          git commit -m "Update README cards" || exit 0
 
-          git add "${files[@]}"
+          # Integrate any remote changes before pushing (fixes "fetch first")
+          git fetch origin main
+          git rebase origin/main
 
-          if git diff --cached --quiet; then
-            echo "No changes to commit."
-            exit 0
-          fi
-
-          git commit -m "Update README cards"
-          git push
+          # Push; if a race still happens, retry once
+          git push || (git fetch origin main && git rebase origin/main && git push)
