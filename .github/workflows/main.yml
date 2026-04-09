@@ -2,11 +2,9 @@ name: Update README cards
 
 on:
   schedule:
-    # Runs once daily at midnight (UTC)
-    - cron: "0 0 * * *"
+    - cron: "0 0 * * *" # daily at 00:00 UTC
   workflow_dispatch:
 
-# Required so GITHUB_TOKEN can push commits back to the repo
 permissions:
   contents: write
 
@@ -20,6 +18,19 @@ jobs:
         with:
           persist-credentials: true
           fetch-depth: 0
+
+      - name: Debug context
+        run: |
+          set -euxo pipefail
+          echo "actor=${{ github.actor }}"
+          echo "repo=${{ github.repository }}"
+          echo "ref=${{ github.ref }}"
+          git --version
+
+      - name: Ensure profile directory exists
+        run: |
+          set -euxo pipefail
+          mkdir -p profile
 
       - name: Generate stats card
         uses: readme-tools/github-readme-stats-action@v1
@@ -45,15 +56,29 @@ jobs:
           path: profile/pin-readme-tools-github-readme-stats.svg
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Commit cards
+      - name: Debug generated files
         run: |
-          set -e
+          set -euxo pipefail
+          ls -la
+          ls -la profile || true
+          file profile/*.svg || true
+
+      - name: Commit & push (only if files changed)
+        run: |
+          set -euxo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add profile/*.svg
+          # Don't fail if no files match (prevents exit code 1)
+          shopt -s nullglob
+          files=(profile/*.svg)
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "No SVG files found under profile/. Nothing to commit."
+            exit 0
+          fi
 
-          # If nothing changed, don't fail the workflow
+          git add "${files[@]}"
+
           if git diff --cached --quiet; then
             echo "No changes to commit."
             exit 0
