@@ -165,14 +165,14 @@ AI / ML             █████████████░░░░░░░
 
 <!-- Snake Animation -->
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Dhruv-Ohlan/Dhruv-Ohlan/output/github-snake-dark.svg" />
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/Dhruv-Ohlan/Dhruv-Ohlan/output/github-snake.svg" />
-  <img alt="GitHub contribution snake animation" src="https://raw.githubusercontent.com/Dhruv-Ohlan/Dhruv-Ohlan/output/github-snake-dark.svg" width="100%" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Dhruv-Ohlan/dhruv-ohlan/output/github-contribution-grid-snake-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/Dhruv-Ohlan/dhruv-ohlan/output/github-contribution-grid-snake.svg">
+  <img alt="github contribution grid snake animation" src="https://raw.githubusercontent.com/Dhruv-Ohlan/dhruv-ohlan/output/github-contribution-grid-snake.svg">
 </picture>
 
 </div>
 
-> **Note:** To enable the snake animation, add a GitHub Actions workflow in your profile repo. [Setup guide →](https://github.com/Platane/snk)
+<!-- **Note:** To enable the snake animation, add a GitHub Actions workflow in your profile repo. [Setup guide →](https://github.com/Platane/snk) -->
 
 <br/>
 
