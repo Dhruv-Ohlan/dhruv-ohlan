@@ -1,5 +1,9 @@
 <!-- Animated Banner -->
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0f0c29,50:302b63,100:24243e&height=200&section=header&text=Dhruv%20Ohlan&fontSize=70&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=Software%20Engineer%20%E2%80%A2%20Full-Stack%20Dev%20%E2%80%A2%20AI%20Enthusiast&descAlignY=58&descSize=18&descColor=a78bfa" width="100%"/>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Dhruv-Ohlan/Dhruv-Ohlan/main/dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/Dhruv-Ohlan/Dhruv-Ohlan/main/light.svg">
+  <img alt="Dhruv Kumar Ohlan" src="https://raw.githubusercontent.com/Dhruv-Ohlan/Dhruv-Ohlan/main/dark.svg">
+</picture>
 
 <!-- Typing Animation -->
 <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=22&duration=3000&pause=800&color=A78BFA&center=true&vCenter=true&multiline=false&width=600&lines=Building+the+web%2C+one+commit+at+a+time+%F0%9F%9A%80;Full-Stack+Developer+%7C+React+%2B+Node.js;Exploring+AI%2FML+%26+Next.js;Open+to+Collaboration+%E2%9C%A8" alt="Typing SVG" />
